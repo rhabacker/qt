@@ -128,6 +128,7 @@ Q_SIGNALS:
     void selectionChanged();
     void iconChanged();
     void urlChanged(const QUrl&);
+    void aboutToPrintPage(QPrinter*, QPainter*, int pageNum) const;
 
 protected:
     void resizeEvent(QResizeEvent*);

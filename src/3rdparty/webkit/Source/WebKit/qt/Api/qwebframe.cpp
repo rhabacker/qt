@@ -1499,6 +1499,7 @@ void QWebFrame::print(QPrinter *printer) const
                     printContext.end();
                     return;
                 }
+                emit aboutToPrintPage(printer, &painter, page - 1);
                 printContext.spoolPage(ctx, page - 1, pageRect.width());
                 if (j < pageCopies - 1)
                     printer->newPage();

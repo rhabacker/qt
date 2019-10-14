@@ -392,6 +392,8 @@ void QWebView::setPage(QWebPage* page)
                 this, SIGNAL(iconChanged()));
         connect(mainFrame, SIGNAL(urlChanged(QUrl)),
                 this, SIGNAL(urlChanged(QUrl)));
+        connect(mainFrame, SIGNAL(aboutToPrintPage(QPrinter*,QPainter*,int)),
+                this, SIGNAL(aboutToPrintPage(QPrinter*,QPainter*,int)));
 
         connect(d->page, SIGNAL(loadStarted()),
                 this, SIGNAL(loadStarted()));

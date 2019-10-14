@@ -223,6 +223,9 @@ Q_SIGNALS:
 
     void pageChanged();
 
+#ifndef QT_NO_PRINTER
+    void aboutToPrintPage(QPrinter*, QPainter*, int pageNum) const;
+#endif
 private:
     friend class QGraphicsWebView;
     friend class QWebPage;
