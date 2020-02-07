@@ -17,7 +17,9 @@ TEMPLATE        = subdirs
             contains(QT_EDITION, Console) {
                 SUBDIRS += designer/src/uitools     # Linguist depends on this
             } else {
-                SUBDIRS += designer
+                contains(QT_BUILD_PARTS, designer) {
+                    SUBDIRS += designer
+                }
             }
         }
         unix:!symbian:!mac:!embedded:!qpa:SUBDIRS += qtconfig

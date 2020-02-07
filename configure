@@ -778,7 +778,7 @@ CFG_FONTCONFIG=auto
 CFG_QWS_FREETYPE=auto
 CFG_LIBFREETYPE=auto
 CFG_SQL_AVAILABLE=
-QT_DEFAULT_BUILD_PARTS="qmake libs tools examples demos docs translations"
+QT_DEFAULT_BUILD_PARTS="qmake libs tools examples demos docs translations designer"
 CFG_BUILD_PARTS=""
 CFG_NOBUILD_PARTS=""
 CFG_RELEASE_QMAKE=no
@@ -3612,7 +3612,7 @@ if [ -z "$CFG_BUILD_PARTS" ]; then
 
     # don't build tools by default when cross-compiling
     if [ "$PLATFORM" != "$XPLATFORM" ]; then
-	CFG_BUILD_PARTS=`echo "$CFG_BUILD_PARTS" | sed "s, tools,,g"`
+	CFG_BUILD_PARTS=`echo "$CFG_BUILD_PARTS" | sed "s, tools,,g;s, designer,,g"`
     fi
 fi
 for nobuild in $CFG_NOBUILD_PARTS; do
