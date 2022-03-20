@@ -554,6 +554,11 @@ void QLineEdit::setEchoMode(EchoMode mode)
     }
     setInputMethodHints(imHints);
     d->control->setEchoMode(mode);
+    // disable IM for password or noecho
+    if (mode == Password || mode == NoEcho)
+	setAttribute(Qt::WA_InputMethodEnabled, false);
+    else
+	setAttribute(Qt::WA_InputMethodEnabled, d->shouldEnableInputMethod());
     update();
 #ifdef Q_WS_MAC
     if (hasFocus())
