@@ -859,7 +859,7 @@ bool QProcessPrivate::startDetached(const QString &program, const QStringList &a
                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0
                                    };
         success = CreateProcess(0, (wchar_t*)args.utf16(),
-                                0, 0, FALSE, CREATE_UNICODE_ENVIRONMENT | CREATE_NEW_CONSOLE, 0,
+                                0, 0, FALSE, CREATE_UNICODE_ENVIRONMENT | (GetConsoleWindow() ? 0 : CREATE_NO_WINDOW), 0,
                                 workingDir.isEmpty() ? 0 : (wchar_t*)workingDir.utf16(),
                                 &startupInfo, &pinfo);
 #endif // Q_OS_WINCE
