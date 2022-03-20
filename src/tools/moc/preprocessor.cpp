@@ -799,7 +799,7 @@ void Preprocessor::preprocess(const QByteArray &filename, Symbols &preprocessed)
             QFileInfo fi;
             if (local)
                 fi.setFile(QFileInfo(QString::fromLocal8Bit(filename)).dir(), QString::fromLocal8Bit(include));
-            for (int j = 0; j < Preprocessor::includes.size() && !fi.exists(); ++j) {
+            for (int j = 0; j < Preprocessor::includes.size() && ( !fi.exists() || fi.isDir() ); ++j) {
                 const IncludePath &p = Preprocessor::includes.at(j);
                 if (p.isFrameworkPath) {
                     const int slashPos = include.indexOf('/');
@@ -819,7 +819,7 @@ void Preprocessor::preprocess(const QByteArray &filename, Symbols &preprocessed)
                 }
             }
 
-            if (!fi.exists() || fi.isDir())
+            if ( !fi.exists() )
                 continue;
             include = fi.canonicalFilePath().toLocal8Bit();
 
