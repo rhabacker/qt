@@ -655,6 +655,7 @@ void QSslSocketPrivate::resetDefaultCiphers()
     SSL *mySsl = q_SSL_new(myCtx);
 
     QList<QSslCipher> ciphers;
+    QList<QSslCipher> defaultCiphers;
 
     STACK_OF(SSL_CIPHER) *supportedCiphers = q_SSL_get_ciphers(mySsl);
     for (int i = 0; i < q_sk_SSL_CIPHER_num(supportedCiphers); ++i) {
@@ -665,8 +666,13 @@ void QSslSocketPrivate::resetDefaultCiphers()
                     // Unconditionally exclude ADH and AECDH ciphers since they offer no MITM protection
                     if (!ciph.name().toLower().startsWith(QLatin1String("adh")) &&
                         !ciph.name().toLower().startsWith(QLatin1String("exp-adh")) &&
-                        !ciph.name().toLower().startsWith(QLatin1String("aecdh")))
+                        !ciph.name().toLower().startsWith(QLatin1String("aecdh"))) {
                         ciphers << ciph;
+
+                        if (ciph.usedBits() >= 128 &&
+                            !ciph.encryptionMethod().toLower().startsWith(QLatin1String("rc4")))
+                            defaultCiphers << ciph;
+                    }
                 }
             }
         }
@@ -676,7 +682,7 @@ void QSslSocketPrivate::resetDefaultCiphers()
     q_SSL_free(mySsl);
 
     setDefaultSupportedCiphers(ciphers);
-    setDefaultCiphers(ciphers);
+    setDefaultCiphers(defaultCiphers);
 }
 
 #if defined(Q_OS_SYMBIAN)
