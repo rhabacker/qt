@@ -68,7 +68,7 @@ using namespace std;
 
 namespace JSC {
 
-#if OS(DARWIN) || OS(WINDOWS)
+#if OS(DARWIN) || (OS(WINDOWS) && CPU(X86))
 #define SYMBOL_STRING(name) "_" #name
 #else
 #define SYMBOL_STRING(name) #name
