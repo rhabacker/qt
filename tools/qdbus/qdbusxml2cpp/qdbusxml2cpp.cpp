@@ -549,9 +549,11 @@ static void writeProxy(const QString &filename, const QDBusIntrospection::Interf
     } else {
         includeGuard = QLatin1String("QDBUSXML2CPP_PROXY");
     }
+#if 0
     includeGuard = QString(QLatin1String("%1_%2"))
                    .arg(includeGuard)
                    .arg(QDateTime::currentDateTime().toTime_t());
+#endif
     hs << "#ifndef " << includeGuard << endl
        << "#define " << includeGuard << endl
        << endl;
@@ -855,9 +857,11 @@ static void writeAdaptor(const QString &filename, const QDBusIntrospection::Inte
     } else {
         includeGuard = QLatin1String("QDBUSXML2CPP_ADAPTOR");
     }
+#if 0
     includeGuard = QString(QLatin1String("%1_%2"))
                    .arg(includeGuard)
                    .arg(QDateTime::currentDateTime().toTime_t());
+#endif
     hs << "#ifndef " << includeGuard << endl
        << "#define " << includeGuard << endl
        << endl;
