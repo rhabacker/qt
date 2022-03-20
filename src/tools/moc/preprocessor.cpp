@@ -535,6 +535,21 @@ void Preprocessor::substituteUntilNewline(Symbols &substituted, MacroSafeSet saf
             MacroName macro = symbol();
             if (macros.contains(macro) && !safeset.contains(macro)) {
                 substituteMacro(macro, substituted, safeset);
+                if (substituted.count()>4)
+                {
+                    int i=substituted.count()-4;
+                    if (substituted.at(i).lexem()=="("
+                       && substituted.at(i+1).lexem()=="#"
+                       && substituted.at(i+2).lexem()=="__VA_ARGS__"
+                       && substituted.at(i+3).lexem()==")")
+                    {
+                       // Let's ignore the following expression, since it'll considered a string, and so, it's better not to parse it.
+                       if (test(PP_LPAREN)) {
+                           while (!test(PP_RPAREN)) next();
+                       }
+
+                    }
+                }
                 continue;
             }
         } else if (token == PP_DEFINED) {
