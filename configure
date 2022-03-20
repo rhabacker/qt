@@ -778,7 +778,7 @@ CFG_FONTCONFIG=auto
 CFG_QWS_FREETYPE=auto
 CFG_LIBFREETYPE=auto
 CFG_SQL_AVAILABLE=
-QT_DEFAULT_BUILD_PARTS="libs tools examples demos docs translations"
+QT_DEFAULT_BUILD_PARTS="qmake libs tools examples demos docs translations"
 CFG_BUILD_PARTS=""
 CFG_NOBUILD_PARTS=""
 CFG_RELEASE_QMAKE=no
@@ -1111,6 +1111,10 @@ while [ "$#" -gt 0 ]; do
         VAR=`echo $1 | sed "s,^--\(.*\),\1,"`
         VAL=yes
         ;;
+    -system-qmake)
+        VAR=system-qmake
+        VAL=yes
+        ;;
     -system-proxies)
         VAR=system-proxies
         VAL=yes
@@ -1143,7 +1147,7 @@ while [ "$#" -gt 0 ]; do
         VAL=no
         ;;
     #Qt style yes options
-    -incremental|-qvfb|-profile|-shared|-static|-sm|-xinerama|-xshape|-xsync|-xinput|-egl|-reduce-exports|-pch|-separate-debug-info|-stl|-freetype|-xcursor|-xfixes|-xrandr|-xrender|-mitshm|-fontconfig|-xkb|-nis|-qdbus|-dbus|-dbus-linked|-glib|-gstreamer|-gtkstyle|-cups|-iconv|-largefile|-h|-help|-v|-verbose|-debug|-release|-fast|-accessibility|-confirm-license|-gnumake|-framework|-qt3support|-debug-and-release|-exceptions|-cocoa|-carbon|-universal|-harfbuzz|-prefix-install|-silent|-armfpa|-optimized-qmake|-dwarf2|-reduce-relocations|-sse|-openssl|-openssl-linked|-ptmalloc|-xmlpatterns|-phonon|-phonon-backend|-multimedia|-audio-backend|-svg|-declarative|-declarative-debug|-javascript-jit|-script|-scripttools|-rpath|-force-pkg-config|-s60|-usedeffiles|-icu)
+    -incremental|-qvfb|-profile|-shared|-static|-sm|-xinerama|-xshape|-xsync|-xinput|-egl|-reduce-exports|-pch|-separate-debug-info|-stl|-freetype|-xcursor|-xfixes|-xrandr|-xrender|-mitshm|-fontconfig|-xkb|-nis|-qdbus|-dbus|-dbus-linked|-glib|-gstreamer|-gtkstyle|-cups|-iconv|-largefile|-h|-help|-v|-verbose|-debug|-release|-fast|-accessibility|-confirm-license|-gnumake|-framework|-qt3support|-debug-and-release|-exceptions|-cocoa|-carbon|-universal|-harfbuzz|-prefix-install|-silent|-armfpa|-optimized-qmake|-dwarf2|-reduce-relocations|-sse|-openssl|-openssl-linked|-ptmalloc|-xmlpatterns|-phonon|-phonon-backend|-multimedia|-audio-backend|-svg|-declarative|-declarative-debug|-javascript-jit|-script|-scripttools|-rpath|-force-pkg-config|-s60|-usedeffiles|-icu|-qmake-only|-system-qmake)
         VAR=`echo $1 | sed "s,^-\(.*\),\1,"`
         VAL=yes
         ;;
@@ -2518,9 +2522,23 @@ while [ "$#" -gt 0 ]; do
             UNKNOWN_OPT=yes
         fi
         ;;
+    system-qmake)
+        if [ "$VAL" = "yes" ] || [ "$VAL" = "no" ]; then
+            CFG_SYSTEM_QMAKE="$VAL"
+        else
+            UNKNOWN_OPT=yes
+        fi
+        ;;
     system-proxies)
         if [ "$VAL" = "yes" ] || [ "$VAL" = "no" ]; then
             CFG_SYSTEM_PROXIES="$VAL"
+        else
+            UNKNOWN_OPT=yes
+        fi
+        ;;
+    qmake-only)
+        if [ "$VAL" = "yes" ] || [ "$VAL" = "no" ]; then
+            CFG_QMAKE_ONLY="$VAL"
         else
             UNKNOWN_OPT=yes
         fi
@@ -3863,7 +3881,7 @@ Usage:  $relconf [-h] [-prefix <dir>] [-prefix-install] [-bindir <dir>] [-libdir
         [-no-separate-debug-info] [-no-mmx] [-no-3dnow] [-no-sse] [-no-sse2]
         [-no-sse3] [-no-ssse3] [-no-sse4.1] [-no-sse4.2] [-no-avx] [-no-neon]
         [-qtnamespace <namespace>] [-qtlibinfix <infix>] [-separate-debug-info] [-armfpa]
-        [-no-optimized-qmake] [-optimized-qmake] [-no-xmlpatterns] [-xmlpatterns]
+        [-no-optimized-qmake] [-optimized-qmake] [-system-qmake] [-qmake-only] [-no-xmlpatterns] [-xmlpatterns]
         [-no-multimedia] [-multimedia] [-no-phonon] [-phonon] [-no-phonon-backend] [-phonon-backend]
         [-no-media-backend] [-media-backend] [-no-audio-backend] [-audio-backend] 
         [-no-openssl] [-openssl] [-openssl-linked]
@@ -4142,6 +4160,10 @@ Additional options:
 
     -silent ............ Reduce the build output so that warnings and errors
                          can be seen more easily.
+
+    -system-qmake ...... Use system qmake
+
+    -qmake-only ........ Only build qmake
 
  *  -no-optimized-qmake ... Do not build qmake optimized.
     -optimized-qmake ...... Build qmake optimized.
@@ -4925,8 +4947,17 @@ setBootstrapVariable()
     getQMakeConf "$1" | echo ${2-$1} = `if [ -n "$3" ]; then sed "$3"; else cat; fi` >> "$mkfile"
 }
 
+if [ "$CFG_SYSTEM_QMAKE" = "yes" ]; then
+    if test -z "$QMAKE"; then export QMAKE="/usr/bin/qmake"; fi
+    mkdir -p $outpath/bin
+    ln -s $QMAKE $outpath/bin/qmake
+    CFG_BUILD_PARTS=`echo "$CFG_BUILD_PARTS" | sed 's,qmake,,g'`
+else
+    export QMAKE="$outpath/bin/qmake"
+fi
+
 # build qmake
-if  [ ! -f "$outpath/bin/qmake" ]; then
+if [ "$CFG_SYSTEM_QMAKE" != "yes" ] && [ ! -f "$QMAKE" ]; then
     echo "Creating qmake. Please wait..."
 
     OLD_QCONFIG_H=
@@ -5091,6 +5122,10 @@ if  [ ! -f "$outpath/bin/qmake" ]; then
     [ "$QMAKE_BUILD_ERROR" = "yes" ] && exit 2
 fi # Build qmake
 
+if [ "$CFG_QMAKE_ONLY" = "yes" ]; then
+    exit 0
+fi
+
 #-------------------------------------------------------------------------------
 # write out device config before we run the test.
 #-------------------------------------------------------------------------------
@@ -5107,7 +5142,7 @@ if [ -z "$PKG_CONFIG" ]; then
     (echo TEMPLATE = subdirs
      echo 'message($$PKG_CONFIG)') > "$outpath/dummy.pro"
     echo "QT_BUILD_TREE = $outpath" > "$outpath/.qmake.cache.pkgconfig"
-    PKG_CONFIG=`"$outpath/bin/qmake" -cache "$outpath/.qmake.cache.pkgconfig" -spec "$XQMAKESPEC" "$outpath/dummy.pro" -o /dev/null 2>&1 > /dev/null | sed -n -e 's,Project MESSAGE: \(.*\),\1,p'`
+    PKG_CONFIG=`"$QMAKE" -cache "$outpath/.qmake.cache.pkgconfig" -spec "$XQMAKESPEC" "$outpath/dummy.pro" -o /dev/null 2>&1 > /dev/null | sed -n -e 's,Project MESSAGE: \(.*\),\1,p'`
     rm "$outpath/.qmake.cache.pkgconfig" "$outpath/dummy.pro"
 fi
 if [ -z "$PKG_CONFIG" ]; then
@@ -5359,7 +5394,7 @@ if [ "$XPLATFORM_INTEGRITY" = "yes" ]; then
     if [ "$CFG_SCRIPT" != "yes" ]; then
       CFG_SCRIPT="no"
     fi
-    CFG_BUILD_PARTS="libs examples demos"
+    CFG_BUILD_PARTS="qmake libs examples demos"
     CFG_GIF="no"
 fi
 
@@ -9182,11 +9217,11 @@ EXEC=""
 
 echo "Finding project files. Please wait..."
 if [ "$CFG_NOPROCESS" != "yes" ]; then
-    "$outpath/bin/qmake" -prl -r "${relpath}/projects.pro"
+    "$QMAKE" -prl -r "${relpath}/projects.pro"
     if [ -f "${relpath}/projects.pro" ]; then
         mkfile="${outpath}/Makefile"
         [ -f "$mkfile" ] && chmod +w "$mkfile"
-        QTDIR="$outpath" "$outpath/bin/qmake" -spec "$XQMAKESPEC" "${relpath}/projects.pro" -o "$mkfile"
+        QTDIR="$outpath" "$QMAKE" -spec "$XQMAKESPEC" "${relpath}/projects.pro" -o "$mkfile"
     fi
 fi
 
@@ -9373,8 +9408,7 @@ for file in .projects .projects.3; do
         QMAKE_SPEC_ARGS="-spec $SPEC"
         echo $ECHO_N "  for $a$ECHO_C"
 
-        QMAKE="$outpath/bin/qmake"
-	QMAKE_ARGS="$QMAKE_SWITCHES $QMAKE_SPEC_ARGS"
+        QMAKE_ARGS="$QMAKE_SWITCHES $QMAKE_SPEC_ARGS"
         if [ "$file" = ".projects.3" ]; then
             echo " (fast)"
 

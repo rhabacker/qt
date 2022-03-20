@@ -140,13 +140,15 @@ CONFIG -= qt
 ### installations ####
 
 #qmake
-qmake.path=$$[QT_INSTALL_BINS]
-equals(QMAKE_HOST.os, Windows) {
-   qmake.files=$$QT_BUILD_TREE/bin/qmake.exe
-} else {
-   qmake.files=$$QT_BUILD_TREE/bin/qmake
+contains(QT_BUILD_PARTS, qmake) {
+    qmake.path=$$[QT_INSTALL_BINS]
+    equals(QMAKE_HOST.os, Windows) {
+        qmake.files=$$QT_BUILD_TREE/bin/qmake.exe
+    } else {
+        qmake.files=$$QT_BUILD_TREE/bin/qmake
+    }
+    INSTALLS += qmake
 }
-INSTALLS += qmake
 
 #mkspecs
 mkspecs.path=$$[QT_INSTALL_DATA]/mkspecs
