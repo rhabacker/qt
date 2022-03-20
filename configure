@@ -3238,6 +3238,12 @@ if [ -z "${CFG_HOST_ARCH}" ]; then
         fi
         CFG_HOST_ARCH=powerpc
         ;;
+    *:*:ppc64le)
+        if [ "$OPT_VERBOSE" = "yes" ]; then
+            echo "    64-bit PowerPC LE (powerpc)"
+        fi
+        CFG_HOST_ARCH=powerpc
+        ;;
     *:*:s390*)
     	if [ "$OPT_VERBOSE" = "yes" ]; then
     	    echo "    IBM S/390 (s390)"
