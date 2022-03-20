@@ -11,4 +11,8 @@ CONFIG(debug, debug|release) {
 }
 LIBS += $$QTUITOOLS_LINKAGE
 
+CONFIG(static) {
+    LIBS += -lQtGui$${QT_LIBINFIX} $${QMAKE_LIBS_GUI} -lQtCore$${QT_LIBINFIX} $${QMAKE_LIBS_CORE}
+}
+
 INCLUDEPATH = $$QMAKE_INCDIR_QT/QtUiTools $$INCLUDEPATH
