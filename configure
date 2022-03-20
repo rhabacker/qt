@@ -4926,7 +4926,7 @@ setBootstrapVariable()
 }
 
 # build qmake
-if true; then ###[ '!' -f "$outpath/bin/qmake" ];
+if  [ ! -f "$outpath/bin/qmake" ]; then
     echo "Creating qmake. Please wait..."
 
     OLD_QCONFIG_H=
