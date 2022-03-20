@@ -111,16 +111,16 @@ DEFINEFUNC(int, ASN1_STRING_length, ASN1_STRING *a, a, return 0, return)
 DEFINEFUNC2(int, ASN1_STRING_to_UTF8, unsigned char **a, a, ASN1_STRING *b, b, return 0, return);
 DEFINEFUNC4(long, BIO_ctrl, BIO *a, a, int b, b, long c, c, void *d, d, return -1, return)
 DEFINEFUNC(int, BIO_free, BIO *a, a, return 0, return)
-DEFINEFUNC(BIO *, BIO_new, BIO_METHOD *a, a, return 0, return)
+DEFINEFUNC(BIO *, BIO_new, BIO_METHOD const *a, a, return 0, return)
 DEFINEFUNC2(BIO *, BIO_new_mem_buf, void *a, a, int b, b, return 0, return)
 DEFINEFUNC3(int, BIO_read, BIO *a, a, void *b, b, int c, c, return -1, return)
-DEFINEFUNC(BIO_METHOD *, BIO_s_mem, void, DUMMYARG, return 0, return)
+DEFINEFUNC(BIO_METHOD const *, BIO_s_mem, void, DUMMYARG, return 0, return)
 DEFINEFUNC3(int, BIO_write, BIO *a, a, const void *b, b, int c, c, return -1, return)
 DEFINEFUNC(int, BN_num_bits, const BIGNUM *a, a, return 0, return)
 DEFINEFUNC(int, CRYPTO_num_locks, DUMMYARG, DUMMYARG, return 0, return)
 DEFINEFUNC(void, CRYPTO_set_locking_callback, void (*a)(int, int, const char *, int), a, return, DUMMYARG)
 DEFINEFUNC(void, CRYPTO_set_id_callback, unsigned long (*a)(), a, return, DUMMYARG)
-DEFINEFUNC(void, CRYPTO_free, void *a, a, return, DUMMYARG)
+DEFINEFUNC3(void, CRYPTO_free, void *a, a, const char *file, file, int line, line, return, DUMMYARG)
 DEFINEFUNC(void, DSA_free, DSA *a, a, return, DUMMYARG)
 #if  OPENSSL_VERSION_NUMBER < 0x00908000L
 DEFINEFUNC3(X509 *, d2i_X509, X509 **a, a, unsigned char **b, b, long c, c, return 0, return)
@@ -304,7 +304,7 @@ DEFINEFUNC(int, RSA_bits,  const RSA *rsa, rsa, return 0, return)
 DEFINEFUNC(int, DSA_security_bits, const DSA *dsa, dsa, return 0, return)
 DEFINEFUNC(ASN1_TIME *, X509_get_notAfter, X509 *x, x, return 0, return)
 DEFINEFUNC(ASN1_TIME *, X509_get_notBefore, X509 *x, x, return 0, return)
-DEFINEFUNC4(void, DSA_get0_pqg, const DSA *d, d, BIGNUM **p, p, BIGNUM **q, q, BIGNUM **g, g, return, return)
+DEFINEFUNC4(void, DSA_get0_pqg, const DSA *d, d, BIGNUM const **p, p, BIGNUM const **q, q, BIGNUM const **g, g, return, return)
 #endif
 
 #ifdef Q_OS_SYMBIAN

@@ -207,16 +207,16 @@ int q_ASN1_STRING_length(ASN1_STRING *a);
 int q_ASN1_STRING_to_UTF8(unsigned char **a, ASN1_STRING *b);
 long q_BIO_ctrl(BIO *a, int b, long c, void *d);
 int q_BIO_free(BIO *a);
-BIO *q_BIO_new(BIO_METHOD *a);
+BIO *q_BIO_new(BIO_METHOD const *a);
 BIO *q_BIO_new_mem_buf(void *a, int b);
 int q_BIO_read(BIO *a, void *b, int c);
-BIO_METHOD *q_BIO_s_mem();
+BIO_METHOD const *q_BIO_s_mem();
 int q_BIO_write(BIO *a, const void *b, int c);
 int q_BN_num_bits(const BIGNUM *a);
 int q_CRYPTO_num_locks();
 void q_CRYPTO_set_locking_callback(void (*a)(int, int, const char *, int));
 void q_CRYPTO_set_id_callback(unsigned long (*a)());
-void q_CRYPTO_free(void *a);
+void q_CRYPTO_free(void *a, const char *file, int line);
 void q_DSA_free(DSA *a);
 #if OPENSSL_VERSION_NUMBER >= 0x00908000L
 // 0.9.8 broke SC and BC by changing this function's signature.
@@ -415,7 +415,7 @@ long q_X509_get_version(X509 *x);
 X509_PUBKEY * q_X509_get_X509_PUBKEY(X509 *x);
 int q_RSA_bits(const RSA *rsa);
 int q_DSA_security_bits(const DSA *dsa);
-void q_DSA_get0_pqg(const DSA *d, BIGNUM **p, BIGNUM **q, BIGNUM **g);
+void q_DSA_get0_pqg(const DSA *d, BIGNUM const **p, BIGNUM const **q, BIGNUM const **g);
 #endif
 
 #define q_SKM_sk_num(type, st) ((int (*)(const STACK_OF(type) *))q_sk_num)(st)

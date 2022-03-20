@@ -60,6 +60,7 @@
 #include <QtCore/qdatetime.h>
 #include <QtCore/qmap.h>
 
+#include <openssl/opensslconf.h>
 #include <openssl/x509.h>
 
 QT_BEGIN_NAMESPACE
