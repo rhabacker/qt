@@ -162,6 +162,9 @@ public:
 #ifdef QT3_SUPPORT
     void sendPendingChildInsertedEvents();
 #endif
+#if defined(Q_WS_X11)
+    virtual void checkWindowRole();
+#endif
 
     static inline Sender *setCurrentSender(QObject *receiver,
                                     Sender *sender);

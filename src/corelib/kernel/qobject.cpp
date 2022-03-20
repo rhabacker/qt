@@ -1102,10 +1102,19 @@ void QObject::setObjectName(const QString &name)
 
     d->objectName = name;
 
+#if defined(Q_WS_X11)
+    d->checkWindowRole();
+#endif
+
     if (objectNameChanged) 
         d->declarativeData->objectNameChanged(d->declarativeData, this);
 }
 
+#if defined(Q_WS_X11)
+void QObjectPrivate::checkWindowRole()
+{
+}
+#endif
 
 #ifdef QT3_SUPPORT
 /*! \internal

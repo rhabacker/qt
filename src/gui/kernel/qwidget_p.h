@@ -784,6 +784,7 @@ public:
     static QWidget *keyboardGrabber;
 
     void setWindowRole();
+    virtual void checkWindowRole();
     void sendStartupMessage(const char *message) const;
     void setNetWmWindowTypes();
     void x11UpdateIsOpaque();

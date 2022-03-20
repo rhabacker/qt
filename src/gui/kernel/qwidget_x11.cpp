@@ -849,13 +849,17 @@ void QWidgetPrivate::create_sys(WId window, bool initializeWindow, bool destroyO
 
 
         // declare the widget's window role
+        QByteArray windowRole;
         if (QTLWExtra *topData = maybeTopData()) {
-            if (!topData->role.isEmpty()) {
-                QByteArray windowRole = topData->role.toUtf8();
-                XChangeProperty(dpy, id,
-                                ATOM(WM_WINDOW_ROLE), XA_STRING, 8, PropModeReplace,
-                                (unsigned char *)windowRole.constData(), windowRole.length());
-            }
+            if (!topData->role.isEmpty())
+                windowRole = topData->role.toUtf8();
+        }
+        if (windowRole.isEmpty()) // use object name as a fallback
+            windowRole = objectName.toUtf8();
+        if (!windowRole.isEmpty()) {
+            XChangeProperty(dpy, id,
+                            ATOM(WM_WINDOW_ROLE), XA_STRING, 8, PropModeReplace,
+                            (unsigned char *)windowRole.constData(), windowRole.length());
         }
 
         // set client leader property
@@ -3012,6 +3016,17 @@ void QWidgetPrivate::setWindowRole()
     if (!q->internalWinId())
         return;
     QByteArray windowRole = topData()->role.toUtf8();
+    XChangeProperty(X11->display, q->internalWinId(),
+                    ATOM(WM_WINDOW_ROLE), XA_STRING, 8, PropModeReplace,
+                    (unsigned char *)windowRole.constData(), windowRole.length());
+}
+
+void QWidgetPrivate::checkWindowRole()
+{
+    Q_Q(QWidget);
+    if( !q->windowRole().isEmpty() || !q->internalWinId())
+        return;
+    QByteArray windowRole = objectName.toUtf8(); // use as a fallback
     XChangeProperty(X11->display, q->internalWinId(),
                     ATOM(WM_WINDOW_ROLE), XA_STRING, 8, PropModeReplace,
                     (unsigned char *)windowRole.constData(), windowRole.length());
