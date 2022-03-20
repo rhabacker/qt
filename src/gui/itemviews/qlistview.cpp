@@ -997,7 +997,7 @@ void QListView::paintEvent(QPaintEvent *e)
                 option.state &= ~QStyle::State_Enabled;
                 cg = QPalette::Disabled;
             } else {
-                cg = QPalette::Normal;
+                cg = window()->isActiveWindow() ? QPalette::Active : QPalette::Inactive;
             }
             option.palette.setCurrentColorGroup(cg);
         }
