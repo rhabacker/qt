@@ -398,6 +398,15 @@ Q_INLINE_TEMPLATE T* QBasicAtomicPointer<T>::fetchAndStoreOrdered(T *newValue)
     return fetchAndStoreAcquire(newValue);
 }
 
+template <typename T>
+Q_INLINE_TEMPLATE T* QBasicAtomicPointer<T>::fetchAndAddOrdered(qptrdiff valueToAdd)
+{
+#ifndef __s390x__
+    return (T*)__CS_OLD_LOOP(&_q_value, (int)valueToAdd, "ar", "", "bcr 15,0\n");
+#else
+    return (T*)__CSG_OLD_LOOP(&_q_value, (long)valueToAdd, "agr", "", "bcr 15,0\n");
+#endif
+}
 
 template <typename T>
 Q_INLINE_TEMPLATE T *QBasicAtomicPointer<T>::fetchAndAddRelaxed(qptrdiff valueToAdd)
