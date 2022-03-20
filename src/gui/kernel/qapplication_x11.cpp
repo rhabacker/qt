@@ -2323,9 +2323,20 @@ void qt_init(QApplicationPrivate *priv, int,
         int rc;
 
         do {
-            if (!qgetenv("KDE_FULL_SESSION").isEmpty()) {
+            if (!qgetenv("KDE_SESSION_VERSION").isEmpty()) {
                 X11->desktopEnvironment = DE_KDE;
                 X11->desktopVersion = qgetenv("KDE_SESSION_VERSION").toInt();
+                break;
+            }
+
+            rc = XGetWindowProperty(X11->display, QX11Info::appRootWindow(), ATOM(KDE_FULL_SESSION),
+                                    0, 2, False, XA_STRING, &type, &format, &length,
+                                    &after, &data);
+            if (rc == Success && length) {
+                X11->desktopEnvironment = DE_KDE;
+                // We got the property but it wasn't xfce4. Free data before it gets overwritten.
+                XFree(data);
+                data = 0;
                 break;
             }
 

@@ -690,6 +690,8 @@ struct QX11Data
         XTabletEraser,
         XTablet,
 
+	KDE_FULL_SESSION,
+
         NPredefinedAtoms,
 
         _QT_SETTINGS_TIMESTAMP = NPredefinedAtoms,

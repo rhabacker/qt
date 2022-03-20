@@ -92,6 +92,7 @@ QGuiPlatformPlugin *qt_guiPlatformPlugin()
                 break;
             default:
                 key = QString::fromLocal8Bit(qgetenv("DESKTOP_SESSION"));
+                key.replace(QLatin1String("kde-plasma"), QLatin1String("kde"));
                 break;
             }
         }
@@ -180,7 +181,15 @@ QString QGuiPlatformPlugin::styleName()
         stylename = QLatin1String("cde");
         break;
     default:
-        // Don't do anything
+        if (X11->use_xrender) {
+            QStringList availableStyles = QStyleFactory::keys();
+            QString kdeStyleKey = QLatin1String("Oxygen");
+            if (availableStyles.contains(kdeStyleKey))
+               stylename = kdeStyleKey;
+            else
+               stylename =  QLatin1String("Plastique");
+        } else
+            stylename =  QLatin1String("windows");
         break;
     }
     return stylename;
