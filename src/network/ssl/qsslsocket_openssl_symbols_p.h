@@ -403,9 +403,11 @@ DSA *q_d2i_DSAPrivateKey(DSA **a, unsigned char **pp, long length);
 X509_STORE * q_SSL_CTX_get_cert_store(const SSL_CTX *ctx);
 ASN1_INTEGER * q_X509_get_serialNumber(X509 *x);
 
-#if OPENSSL_VERSION_NUMBER < 0x10100000L
+#if OPENSSL_VERSION_NUMBER < 0x10200000L
 #define q_SSL_CTX_set_options(ctx,op) q_SSL_CTX_ctrl((ctx),SSL_CTRL_OPTIONS,(op),NULL)
 #define q_X509_get_version(x) X509_get_version(x)
+#define q_RSA_bits(rsa) q_BN_num_bits((rsa)->n)
+#define q_DSA_bits(dsa) q_BN_num_bits((dsa)->p)
 #else
 int q_EVP_PKEY_id(const EVP_PKEY *pkey);
 int q_EVP_PKEY_base_id(const EVP_PKEY *pkey);
@@ -428,8 +430,7 @@ void q_DSA_get0_pqg(const DSA *d, BIGNUM const **p, BIGNUM const **q, BIGNUM con
 #define q_sk_SSL_CIPHER_value(st, i) q_SKM_sk_value(SSL_CIPHER, (st), (i))
 #define q_SSL_CTX_add_extra_chain_cert(ctx,x509) \
         q_SSL_CTX_ctrl(ctx,SSL_CTRL_EXTRA_CHAIN_CERT,0,(char *)x509)
-
-#if OPENSSL_VERSION_NUMBER < 0x10100000L
+#if OPENSSL_VERSION_NUMBER < 0x10200000L
 #define q_X509_get_notAfter(x) X509_get_notAfter(x)
 #define q_X509_get_notBefore(x) X509_get_notBefore(x)
 #else
