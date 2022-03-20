@@ -399,7 +399,25 @@ DSA *q_d2i_DSAPrivateKey(DSA **a, unsigned char **pp, long length);
 		PEM_ASN1_write_bio((int (*)(void*, unsigned char**))q_i2d_DSAPrivateKey,PEM_STRING_DSA,\
 			bp,(char *)x,enc,kstr,klen,cb,u)
 #endif
+
+X509_STORE * q_SSL_CTX_get_cert_store(const SSL_CTX *ctx);
+ASN1_INTEGER * q_X509_get_serialNumber(X509 *x);
+
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
 #define q_SSL_CTX_set_options(ctx,op) q_SSL_CTX_ctrl((ctx),SSL_CTRL_OPTIONS,(op),NULL)
+#define q_X509_get_version(x) X509_get_version(x)
+#else
+int q_EVP_PKEY_id(const EVP_PKEY *pkey);
+int q_EVP_PKEY_base_id(const EVP_PKEY *pkey);
+int q_SSL_CIPHER_get_bits(const SSL_CIPHER *cipher, int *alg_bits);
+long q_SSL_CTX_set_options(SSL_CTX *ctx, long options);
+long q_X509_get_version(X509 *x);
+X509_PUBKEY * q_X509_get_X509_PUBKEY(X509 *x);
+int q_RSA_bits(const RSA *rsa);
+int q_DSA_security_bits(const DSA *dsa);
+void q_DSA_get0_pqg(const DSA *d, BIGNUM **p, BIGNUM **q, BIGNUM **g);
+#endif
+
 #define q_SKM_sk_num(type, st) ((int (*)(const STACK_OF(type) *))q_sk_num)(st)
 #define q_SKM_sk_value(type, st,i) ((type * (*)(const STACK_OF(type) *, int))q_sk_value)(st, i)
 #define q_sk_GENERAL_NAME_num(st) q_SKM_sk_num(GENERAL_NAME, (st))
@@ -410,8 +428,15 @@ DSA *q_d2i_DSAPrivateKey(DSA **a, unsigned char **pp, long length);
 #define q_sk_SSL_CIPHER_value(st, i) q_SKM_sk_value(SSL_CIPHER, (st), (i))
 #define q_SSL_CTX_add_extra_chain_cert(ctx,x509) \
         q_SSL_CTX_ctrl(ctx,SSL_CTRL_EXTRA_CHAIN_CERT,0,(char *)x509)
+
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
 #define q_X509_get_notAfter(x) X509_get_notAfter(x)
 #define q_X509_get_notBefore(x) X509_get_notBefore(x)
+#else
+ASN1_TIME *q_X509_get_notAfter(X509 *x);
+ASN1_TIME *q_X509_get_notBefore(X509 *x);
+#endif
+
 #define q_EVP_PKEY_assign_RSA(pkey,rsa) q_EVP_PKEY_assign((pkey),EVP_PKEY_RSA,\
 					(char *)(rsa))
 #define q_EVP_PKEY_assign_DSA(pkey,dsa) q_EVP_PKEY_assign((pkey),EVP_PKEY_DSA,\
