@@ -120,3 +120,5 @@ contains(CONFIG, lupdate_run):contains(CONFIG, localize_deployment) {
     equals($$list($$last(TEMPLATE)), app): SOURCES += $$[QT_INSTALL_DATA]/mkspecs/common/symbian/appCaptionForTranslation.cpp
     SOURCES += $$[QT_INSTALL_DATA]/mkspecs/common/symbian/packageNameForTranslation.cpp
 }
+
+win32-g++-cross*:contains(TEMPLATE, "lib"):!static:!staticlib:CONFIG += shared
