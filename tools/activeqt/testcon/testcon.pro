@@ -7,6 +7,9 @@ CONFIG	+= qaxserver qaxserver_no_postlink qaxcontainer
 INCLUDEPATH += $$QT_SOURCE_TREE/tools/activeqt/container/debug \
     $$QT_SOURCE_TREE/tools/activeqt/container/release \
     $$QT_BUILD_TREE/src/activeqt/container \
+    $$QT_BUILD_TREE/src/activeqt/container/.uic/release-shared \
+    $$QT_BUILD_TREE/src/activeqt/container/.uic/release-static \
+    $$QT_BUILD_TREE/src/activeqt/container/.uic/debug-shared \
 
 SOURCES	 = main.cpp docuwindow.cpp mainwindow.cpp invokemethod.cpp changeproperties.cpp ambientproperties.cpp controlinfo.cpp
 HEADERS	 = docuwindow.h mainwindow.h invokemethod.h changeproperties.h ambientproperties.h controlinfo.h

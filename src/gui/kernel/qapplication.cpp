@@ -5558,7 +5558,7 @@ uint QApplicationPrivate::currentPlatform(){
     return platform;
 }
 
-bool qt_sendSpontaneousEvent(QObject *receiver, QEvent *event)
+Q_GUI_EXPORT bool qt_sendSpontaneousEvent(QObject *receiver, QEvent *event)
 {
     return QCoreApplication::sendSpontaneousEvent(receiver, event);
 }

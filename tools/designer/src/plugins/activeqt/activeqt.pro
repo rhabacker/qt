@@ -10,6 +10,8 @@ build_all:!build_pass {
 
 INCLUDEPATH += $$QT_SOURCE_TREE/src/activeqt/shared/ \
                $$QT_BUILD_TREE/src/activeqt/container \
+	       $$QT_BUILD_TREE/src/activeqt/container/.uic/release-shared \
+	       $$QT_BUILD_TREE/src/activeqt/container/.uic/debug-shared \
                ../../lib/uilib
 
 # Input

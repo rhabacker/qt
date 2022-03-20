@@ -111,8 +111,6 @@ struct QAxExceptInfo
 };
 
 
-bool qt_sendSpontaneousEvent(QObject*, QEvent*);
-
 /*
     \class QAxServerBase
     \brief The QAxServerBase class is an ActiveX control hosting a QWidget.
@@ -1800,9 +1798,7 @@ void QAxServerBase::resize(const QSize &size)
     // make sure we get a resize event even if not embedded as a control
     if (!m_hWnd && !qt.widget->isVisible() && newSize != oldSize) {
         QResizeEvent resizeEvent(newSize, oldSize);
-#ifndef QT_DLL // import from static library
         extern bool qt_sendSpontaneousEvent(QObject*,QEvent*);
-#endif
         qt_sendSpontaneousEvent(qt.widget, &resizeEvent);
     }
     m_currentExtent = qt.widget->size();
@@ -4068,13 +4064,6 @@ HRESULT WINAPI QAxServerBase::SetColorScheme(LOGPALETTE*)
     return E_NOTIMPL;
 }
 
-
-#ifdef QT_DLL // avoid conflict with symbol in static lib
-bool qt_sendSpontaneousEvent(QObject *o, QEvent *e)
-{
-    return QCoreApplication::sendSpontaneousEvent(o, e);
-}
-#endif
 
 /*
     Tries to set the size of the control.
