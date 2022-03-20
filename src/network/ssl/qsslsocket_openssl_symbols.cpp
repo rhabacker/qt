@@ -431,15 +431,18 @@ static QPair<QSystemLibrary*, QSystemLibrary*> loadOpenSslWin32()
     pair.first = 0;
     pair.second = 0;
 
-    QSystemLibrary *ssleay32 = new QSystemLibrary(QLatin1String("ssleay32"));
+    QSystemLibrary *ssleay32 = new QSystemLibrary(QLatin1String("libssl-OPENSSL_SONAME"));
     if (!ssleay32->load(false)) {
-        // Cannot find ssleay32.dll
+        // Cannot find libssl-OPENSSL_SONAME.dll
+        // in our cross-build that's the same as ssleay32.dll
         delete ssleay32;
         return pair;
     }
 
-    QSystemLibrary *libeay32 = new QSystemLibrary(QLatin1String("libeay32"));
+    QSystemLibrary *libeay32 = new QSystemLibrary(QLatin1String("libcrypto-OPENSSL_SONAME"));
     if (!libeay32->load(false)) {
+        // Cannot find libcrypto-OPENSSL_SONAME.dll
+        // in our cross-build that's the same as libeay32.dll
         delete ssleay32;
         delete libeay32;
         return pair;
