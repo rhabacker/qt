@@ -662,7 +662,10 @@ void QSslSocketPrivate::resetDefaultCiphers()
             if (cipher->valid) {
                 QSslCipher ciph = QSslSocketBackendPrivate::QSslCipher_from_SSL_CIPHER(cipher);
                 if (!ciph.isNull()) {
-                    if (!ciph.name().toLower().startsWith(QLatin1String("adh")))
+                    // Unconditionally exclude ADH and AECDH ciphers since they offer no MITM protection
+                    if (!ciph.name().toLower().startsWith(QLatin1String("adh")) &&
+                        !ciph.name().toLower().startsWith(QLatin1String("exp-adh")) &&
+                        !ciph.name().toLower().startsWith(QLatin1String("aecdh")))
                         ciphers << ciph;
                 }
             }
