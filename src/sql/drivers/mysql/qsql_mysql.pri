@@ -12,5 +12,6 @@ unix {
         QMAKE_CXXFLAGS *= $$QT_CFLAGS_MYSQL
     }
 } else {
-    !contains(LIBS, .*mysql.*):!contains(LIBS, .*mysqld.*):LIBS += -llibmysql
+    use_libmysqlclient_r:LIBS += -lmysqlclient_r
+    else:LIBS += -lmysqlclient
 }
