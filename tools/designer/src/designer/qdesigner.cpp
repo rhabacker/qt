@@ -45,6 +45,7 @@
 #include "qdesigner_server.h"
 #include "qdesigner_settings.h"
 #include "qdesigner_workbench.h"
+#include "qdesigner_formwindow.h"
 #include "mainwindow.h"
 
 #include <qdesigner_propertysheet_p.h>
@@ -205,6 +206,10 @@ bool QDesigner::parseCommandLineArgs(QStringList &fileNames, QString &resourceDi
                 QDesignerPropertySheet::setInternalDynamicPropertiesEnabled(true);
                 break;
             }
+            if (argument == QLatin1String("-refresh")) {
+                m_refresh = true;
+                break;
+            }
             const QString msg = QString::fromUtf8("** WARNING Unknown option %1").arg(argument);
             qWarning("%s", qPrintable(msg));
         } while (false);
@@ -255,7 +260,14 @@ void QDesigner::initialize()
             const QFileInfo fi(fileName);
             if (fi.exists() && fi.isRelative())
                 fileName = fi.absoluteFilePath();
-            m_workbench->readInForm(fileName);
+            if (m_refresh) {
+                QString error;
+                QDesignerFormWindow *w = m_workbench->openForm(fileName, &error);
+                m_workbench->writeOutForm(w->editor(), fileName);
+                m_workbench->removeFormWindow(w);
+            } else
+                m_workbench->readInForm(fileName);
+
         }
     }
     if ( m_workbench->formWindowCount())
