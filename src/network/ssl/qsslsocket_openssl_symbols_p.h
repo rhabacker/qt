@@ -430,7 +430,7 @@ void q_DSA_get0_pqg(const DSA *d, BIGNUM const **p, BIGNUM const **q, BIGNUM con
 #define q_sk_SSL_CIPHER_value(st, i) q_SKM_sk_value(SSL_CIPHER, (st), (i))
 #define q_SSL_CTX_add_extra_chain_cert(ctx,x509) \
         q_SSL_CTX_ctrl(ctx,SSL_CTRL_EXTRA_CHAIN_CERT,0,(char *)x509)
-#if OPENSSL_VERSION_NUMBER < 0x10200000L
+#ifdef X509_get_notAfter
 #define q_X509_get_notAfter(x) X509_get_notAfter(x)
 #define q_X509_get_notBefore(x) X509_get_notBefore(x)
 #else
