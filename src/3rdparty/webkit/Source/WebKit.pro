@@ -1,6 +1,10 @@
 TEMPLATE = subdirs
 CONFIG += ordered
 
+*-g++* {
+    QMAKE_CXXFLAGS += -std=gnu++98
+}
+
 include(WebKit.pri)
 
 !v8 {

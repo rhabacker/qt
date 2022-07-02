@@ -169,13 +169,16 @@ namespace WTF {
         typedef T Type;
     };
 
-#if (defined(__GLIBCXX__) && (__GLIBCXX__ >= 20070724) && defined(__GXX_EXPERIMENTAL_CXX0X__)) || (defined(_MSC_VER) && (_MSC_VER >= 1600))
+#if (defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L) && ((defined(__GLIBCXX__) && (__GLIBCXX__ >= 20150905)))
+    // GCC's libstdc++ supports C++ TR1 type_traits in the std namespace since GCC 5.x,
+    // which corresponds to the GCC DATESTAMP 20150905.
+    template<typename T> struct HasTrivialConstructor : public std::is_trivially_constructible<T> { };
+    template<typename T> struct HasTrivialDestructor : public std::is_trivially_destructible<T> { };
 
-    // GCC's libstdc++ 20070724 and later supports C++ TR1 type_traits in the std namespace.
+#elif (defined(_MSC_VER) && (_MSC_VER >= 1600))
     // VC10 (VS2010) and later support C++ TR1 type_traits in the std::tr1 namespace.
     template<typename T> struct HasTrivialConstructor : public std::is_trivially_constructible<T> { };
     template<typename T> struct HasTrivialDestructor : public std::is_trivially_constructible<T> { };
-
 #else
 
     // This compiler doesn't provide type traits, so we provide basic HasTrivialConstructor
