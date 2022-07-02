@@ -204,6 +204,15 @@ namespace WTF {
         return m_impl.template contains<T, Adapter>(value);
     }
 
+
+#if ((__GNUC__ * 100 + __GNUC_MINOR__) < 600)
+    template<typename T, typename U, typename V>
+    inline pair<typename HashSet<T, U, V>::const_iterator, bool> HashSet<T,U,V>::add(const ValueType &value)
+    {
+        pair<typename HashTableType::iterator, bool> p = m_impl.add(value);
+        return make_pair(typename HashSet<T, U, V>::const_iterator(p.first), p.second);
+    }
+#else
     template<typename T, typename U, typename V>
     pair<typename HashSet<T, U, V>::iterator, bool> HashSet<T, U, V>::add(const ValueType& value)
     {
@@ -214,6 +223,7 @@ namespace WTF {
  //       p2.second = p.second;
         return p2;
     }
+#endif
 
     template<typename Value, typename HashFunctions, typename Traits>
     template<typename T, typename HashTranslator>
