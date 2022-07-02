@@ -287,6 +287,12 @@ bool QSystemTrayIcon::isVisible() const
 */
 bool QSystemTrayIcon::event(QEvent *e)
 {
+#if defined(Q_WS_X11)
+    if (e->type() == QEvent::ToolTip) {
+        Q_D(QSystemTrayIcon);
+        return d->sys->deliverToolTipEvent(e);
+    }
+#endif
     return QObject::event(e);
 }
 

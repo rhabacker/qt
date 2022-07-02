@@ -69,9 +69,6 @@ public:
 
 protected:
     void closeEvent(QCloseEvent *event);
-#if defined(Q_WS_X11)
-    bool eventFilter(QObject *object, QEvent *event);
-#endif
 
 private slots:
     void setIcon(int index);
@@ -89,9 +86,6 @@ private:
     QLabel *iconLabel;
     QComboBox *iconComboBox;
     QCheckBox *showIconCheckBox;
-#if defined(Q_WS_X11)
-    QCheckBox *jitToolTipCheckBox;
-#endif
 
     QGroupBox *messageGroupBox;
     QLabel *typeLabel;

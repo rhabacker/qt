@@ -29,13 +29,8 @@ wince* {
 }
 
 unix:x11 {
-		HEADERS += \
-				util/qabstractsystemtrayiconsys_p.h \
-				util/qxembedsystemtrayicon_x11_p.h
 		SOURCES += \
-				util/qabstractsystemtrayiconsys.cpp \
-				util/qsystemtrayicon_x11.cpp \
-				util/qxembedsystemtrayicon_x11.cpp
+				util/qsystemtrayicon_x11.cpp
 }
 
 embedded|qpa {
