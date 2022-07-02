@@ -403,7 +403,7 @@ DSA *q_d2i_DSAPrivateKey(DSA **a, unsigned char **pp, long length);
 X509_STORE * q_SSL_CTX_get_cert_store(const SSL_CTX *ctx);
 ASN1_INTEGER * q_X509_get_serialNumber(X509 *x);
 
-#if OPENSSL_VERSION_NUMBER < 0x10200000L
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
 #define q_SSL_CTX_set_options(ctx,op) q_SSL_CTX_ctrl((ctx),SSL_CTRL_OPTIONS,(op),NULL)
 #define q_X509_get_version(x) X509_get_version(x)
 #define q_RSA_bits(rsa) q_BN_num_bits((rsa)->n)
