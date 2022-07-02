@@ -235,3 +235,7 @@ lessThan(QT_GCC_MAJOR_VERSION, 5) {
         }
     }
 }
+
+*-g++* {
+    QMAKE_CXXFLAGS += -std=gnu++98
+}
