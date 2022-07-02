@@ -26,6 +26,9 @@
 
 #if (defined(__GLIBCXX__) && (__GLIBCXX__ >= 20070724) && defined(__GXX_EXPERIMENTAL_CXX0X__)) || (defined(_MSC_VER) && (_MSC_VER >= 1600))
 #include <type_traits>
+#if defined(__GLIBCXX__) && (__GLIBCXX__ >= 20070724) && defined(__GXX_EXPERIMENTAL_CXX0X__)
+#include <tr1/memory>
+#endif
 #endif
 
 namespace WTF {
@@ -189,15 +192,8 @@ namespace WTF {
     typedef IntegralConstant<bool, true>  true_type;
     typedef IntegralConstant<bool, false> false_type;
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1400) && !defined(__INTEL_COMPILER)
-    // VC8 (VS2005) and later have built-in compiler support for HasTrivialConstructor / HasTrivialDestructor,
-    // but for some unexplained reason it doesn't work on built-in types.
-    template <typename T> struct HasTrivialConstructor : public IntegralConstant<bool, __has_trivial_constructor(T)>{ };
-    template <typename T> struct HasTrivialDestructor : public IntegralConstant<bool, __has_trivial_destructor(T)>{ };
-#else
     template <typename T> struct HasTrivialConstructor : public false_type{ };
     template <typename T> struct HasTrivialDestructor : public false_type{ };
-#endif
 
     template <typename T> struct HasTrivialConstructor<T*> : public true_type{ };
     template <typename T> struct HasTrivialDestructor<T*> : public true_type{ };
